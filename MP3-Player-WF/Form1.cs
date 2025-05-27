@@ -53,9 +53,16 @@ namespace MP3_Player_WF
             if (output != null)
             {
                 if (output.PlaybackState == PlaybackState.Playing)
+                {
                     output.Pause();
+                    button2.Text = "Play";
+                }
                 else if (output.PlaybackState == PlaybackState.Paused)
+                {
                     output.Play();
+                    button2.Text = "Pause";
+                }
+                    
             }
         }
 
