@@ -151,6 +151,7 @@ namespace MP3_Player_WF
             {
                 currentIndex = playlistBox.SelectedIndex;
                 button2.Enabled = true;
+                button2.Text = "Pause";
                 PlaySelected(currentIndex);
             }
         }
