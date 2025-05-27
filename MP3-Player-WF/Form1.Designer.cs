@@ -44,9 +44,9 @@
             // 
             // button2
             // 
-            button2.Location = new Point(308, 297);
+            button2.Location = new Point(297, 283);
             button2.Name = "button2";
-            button2.Size = new Size(35, 24);
+            button2.Size = new Size(54, 38);
             button2.TabIndex = 1;
             button2.Text = "Play / Pause";
             button2.UseVisualStyleBackColor = true;
