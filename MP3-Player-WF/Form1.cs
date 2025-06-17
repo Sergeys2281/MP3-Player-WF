@@ -75,7 +75,7 @@ namespace MP3_Player_WF
                     output.Play();
                     button2.Text = "Pause";
                 }
-                    
+
             }
         }
 
@@ -121,6 +121,7 @@ namespace MP3_Player_WF
                     playlistBox.Items.Add(Path.GetFileName(file));
                 }
             }
+            File.WriteAllLines("lastplaylist.txt", playlist);
         }
 
         private void btnLoadPlaylist_Click(object sender, EventArgs e)
@@ -157,6 +158,7 @@ namespace MP3_Player_WF
                 File.WriteAllLines(save.FileName, playlist);
                 MessageBox.Show("Плейліст збережено!");
             }
+            File.WriteAllLines("lastplaylist.txt", playlist);
         }
 
         private void playlistBox_DoubleClick(object sender, EventArgs e)
@@ -230,11 +232,19 @@ namespace MP3_Player_WF
         private void progressBar_MouseUp(object sender, MouseEventArgs e)
         {
             if (audioFile != null)
-            {       
+            {
                 double ratio = e.X / (double)progressBar.Width;
                 audioFile.CurrentTime = TimeSpan.FromSeconds(audioFile.TotalTime.TotalSeconds * ratio);
             }
             isDragging = false;
+        }
+
+        // ##### Remove Button #####
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            playlist.RemoveAt(playlistBox.SelectedIndex);
+            playlistBox.Items.RemoveAt(playlistBox.SelectedIndex);
+            File.WriteAllLines("lastplaylist.txt", playlist);
         }
     }
 }

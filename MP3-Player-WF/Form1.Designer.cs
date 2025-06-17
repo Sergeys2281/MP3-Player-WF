@@ -39,6 +39,7 @@
             lblCurrentTime = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
             lblNowPlaying = new Label();
+            removeButton = new Button();
             ((System.ComponentModel.ISupportInitialize)volumeSlider).BeginInit();
             SuspendLayout();
             // 
@@ -137,11 +138,22 @@
             lblNowPlaying.TabIndex = 8;
             lblNowPlaying.Text = "Зараз грає: - ";
             // 
+            // removeButton
+            // 
+            removeButton.Location = new Point(487, 252);
+            removeButton.Name = "removeButton";
+            removeButton.Size = new Size(187, 23);
+            removeButton.TabIndex = 9;
+            removeButton.Text = "Remove";
+            removeButton.UseVisualStyleBackColor = true;
+            removeButton.Click += button1_Click_1;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(686, 390);
+            Controls.Add(removeButton);
             Controls.Add(lblNowPlaying);
             Controls.Add(lblCurrentTime);
             Controls.Add(progressBar);
@@ -171,5 +183,6 @@
         private Label lblCurrentTime;
         private System.Windows.Forms.Timer timer1;
         private Label lblNowPlaying;
+        private Button removeButton;
     }
 }
