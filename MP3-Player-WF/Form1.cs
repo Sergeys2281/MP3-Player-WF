@@ -1,6 +1,7 @@
-using System;
-using System.Windows.Forms;
 using NAudio.Wave;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace MP3_Player_WF
 {
@@ -22,6 +23,18 @@ namespace MP3_Player_WF
         private void Form1_Load(object sender, EventArgs e)
         {
             button2.Enabled = false;
+
+            playlist.Clear();
+            playlistBox.Items.Clear();
+
+            foreach (var line in File.ReadAllLines("lastplaylist.txt"))
+            {
+                if (File.Exists(line))
+                {
+                    playlist.Add(line);
+                    playlistBox.Items.Add(Path.GetFileName(line));
+                }
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -128,6 +141,7 @@ namespace MP3_Player_WF
                         playlistBox.Items.Add(Path.GetFileName(line));
                     }
                 }
+                File.WriteAllLines("lastplaylist.txt", playlist);
 
                 MessageBox.Show("Плейліст завантажено!");
             }
