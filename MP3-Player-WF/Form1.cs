@@ -1,6 +1,7 @@
 using NAudio.Wave;
 using System;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace MP3_Player_WF
@@ -17,8 +18,6 @@ namespace MP3_Player_WF
 
         private List<string> playlist = new List<string>();
         private int currentIndex = -1;
-
-        private bool isDragging = false;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -93,7 +92,7 @@ namespace MP3_Player_WF
                 audioFile = null;
             }
             timer1.Stop();
-            progressBar.Value = 0;
+            trackBar1.Value = 0;
             lblCurrentTime.Text = "0:00 / 0:00";
         }
 
@@ -195,15 +194,15 @@ namespace MP3_Player_WF
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (audioFile != null && !isDragging)
+            if (audioFile != null)
             {
                 TimeSpan currentTime = audioFile.CurrentTime;
                 TimeSpan totalTime = audioFile.TotalTime;
 
                 if (totalTime.TotalSeconds > 0)
                 {
-                    progressBar.Value = Math.Min(progressBar.Maximum,
-                        (int)(currentTime.TotalSeconds / totalTime.TotalSeconds * progressBar.Maximum));
+                    trackBar1.Value = Math.Min(trackBar1.Maximum,
+                        (int)(currentTime.TotalSeconds / totalTime.TotalSeconds * trackBar1.Maximum));
                 }
 
                 lblCurrentTime.Text = $"{FormatTime(currentTime)} / {FormatTime(totalTime)}";
@@ -217,26 +216,19 @@ namespace MP3_Player_WF
                     currentIndex++;
                     PlaySelected(currentIndex);
                 }
+                else if (output != null &&
+                    output.PlaybackState == PlaybackState.Stopped &&
+                    currentIndex >= playlist.Count - 1)
+                {
+                    DisposeAudio();
+                    button2.Enabled = false;
+                }
             }
         }
 
         private string FormatTime(TimeSpan time)
         {
             return string.Format("{0}:{1:D2}", (int)time.TotalMinutes, time.Seconds);
-        }
-        private void progressBar_MouseDown(object sender, MouseEventArgs e)
-        {
-            isDragging = true;
-        }
-
-        private void progressBar_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (audioFile != null)
-            {
-                double ratio = e.X / (double)progressBar.Width;
-                audioFile.CurrentTime = TimeSpan.FromSeconds(audioFile.TotalTime.TotalSeconds * ratio);
-            }
-            isDragging = false;
         }
 
         // ##### Remove Button #####
@@ -245,6 +237,37 @@ namespace MP3_Player_WF
             playlist.RemoveAt(playlistBox.SelectedIndex);
             playlistBox.Items.RemoveAt(playlistBox.SelectedIndex);
             File.WriteAllLines("lastplaylist.txt", playlist);
+        }
+
+        // ##### Progress Bar #####
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            if (audioFile != null)
+            {
+                audioFile.CurrentTime = TimeSpan.FromSeconds(audioFile.TotalTime.TotalSeconds * (trackBar1.Value / 1000f));
+            }
+        }
+
+        private void nextTrackButton_Click(object sender, EventArgs e)
+        {
+            if (output != null && currentIndex < playlist.Count - 1)
+            {
+                currentIndex++;
+                PlaySelected(currentIndex);
+            }
+        }
+
+        private void prevTrackButton_Click(object sender, EventArgs e)
+        {
+            if (output != null && audioFile.CurrentTime > TimeSpan.FromSeconds(5))
+            {
+                audioFile.CurrentTime = TimeSpan.Zero;
+            }
+            else if (output != null && audioFile.CurrentTime < TimeSpan.FromSeconds(5) && currentIndex > 0)
+            {
+                currentIndex--;
+                PlaySelected(currentIndex);
+            }
         }
     }
 }

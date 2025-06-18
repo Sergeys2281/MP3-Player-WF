@@ -35,12 +35,15 @@
             btnLoadPlaylist = new Button();
             btnAddToPlaylist = new Button();
             volumeSlider = new TrackBar();
-            progressBar = new ProgressBar();
             lblCurrentTime = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
             lblNowPlaying = new Label();
             removeButton = new Button();
+            trackBar1 = new TrackBar();
+            nextTrackButton = new Button();
+            prevTrackButton = new Button();
             ((System.ComponentModel.ISupportInitialize)volumeSlider).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             SuspendLayout();
             // 
             // button2
@@ -105,16 +108,6 @@
             volumeSlider.Value = 50;
             volumeSlider.Scroll += volumeSlider_Scroll;
             // 
-            // progressBar
-            // 
-            progressBar.Location = new Point(124, 355);
-            progressBar.Maximum = 1000;
-            progressBar.Name = "progressBar";
-            progressBar.Size = new Size(402, 23);
-            progressBar.TabIndex = 6;
-            progressBar.MouseDown += progressBar_MouseDown;
-            progressBar.MouseUp += progressBar_MouseUp;
-            // 
             // lblCurrentTime
             // 
             lblCurrentTime.AutoSize = true;
@@ -148,15 +141,46 @@
             removeButton.UseVisualStyleBackColor = true;
             removeButton.Click += button1_Click_1;
             // 
+            // trackBar1
+            // 
+            trackBar1.Location = new Point(124, 345);
+            trackBar1.Maximum = 1000;
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(402, 45);
+            trackBar1.TabIndex = 0;
+            trackBar1.Scroll += trackBar1_Scroll;
+            // 
+            // nextTrackButton
+            // 
+            nextTrackButton.Location = new Point(357, 283);
+            nextTrackButton.Name = "nextTrackButton";
+            nextTrackButton.Size = new Size(42, 38);
+            nextTrackButton.TabIndex = 11;
+            nextTrackButton.Text = ">";
+            nextTrackButton.UseVisualStyleBackColor = true;
+            nextTrackButton.Click += nextTrackButton_Click;
+            // 
+            // prevTrackButton
+            // 
+            prevTrackButton.Location = new Point(249, 283);
+            prevTrackButton.Name = "prevTrackButton";
+            prevTrackButton.Size = new Size(42, 38);
+            prevTrackButton.TabIndex = 12;
+            prevTrackButton.Text = "<";
+            prevTrackButton.UseVisualStyleBackColor = true;
+            prevTrackButton.Click += prevTrackButton_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(686, 390);
+            Controls.Add(prevTrackButton);
+            Controls.Add(nextTrackButton);
+            Controls.Add(trackBar1);
             Controls.Add(removeButton);
             Controls.Add(lblNowPlaying);
             Controls.Add(lblCurrentTime);
-            Controls.Add(progressBar);
             Controls.Add(volumeSlider);
             Controls.Add(btnAddToPlaylist);
             Controls.Add(btnLoadPlaylist);
@@ -168,6 +192,7 @@
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)volumeSlider).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -179,10 +204,12 @@
         private Button btnLoadPlaylist;
         private Button btnAddToPlaylist;
         private TrackBar volumeSlider;
-        private ProgressBar progressBar;
         private Label lblCurrentTime;
         private System.Windows.Forms.Timer timer1;
         private Label lblNowPlaying;
         private Button removeButton;
+        private TrackBar trackBar1;
+        private Button nextTrackButton;
+        private Button prevTrackButton;
     }
 }
