@@ -219,7 +219,7 @@ namespace MP3_Player_WF
                 // Перевірка завершення
                 if (output != null &&
                     output.PlaybackState == PlaybackState.Stopped &&
-                    currentTime >= totalTime)
+                    currentTime >= totalTime - TimeSpan.FromSeconds(1))
                 {
                     string playedTrack = playlist[currentIndex];
                     if (playCounts.ContainsKey(playedTrack))
