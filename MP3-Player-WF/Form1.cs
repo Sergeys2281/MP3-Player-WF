@@ -22,6 +22,8 @@ namespace MP3_Player_WF
         private void Form1_Load(object sender, EventArgs e)
         {
             button2.Enabled = false;
+            nextTrackButton.Enabled = false;
+            prevTrackButton.Enabled = false;
 
             playlist.Clear();
             playlistBox.Items.Clear();
@@ -165,8 +167,12 @@ namespace MP3_Player_WF
             if (playlistBox.SelectedIndex >= 0)
             {
                 currentIndex = playlistBox.SelectedIndex;
+
                 button2.Enabled = true;
                 button2.Text = "Pause";
+                nextTrackButton.Enabled = true;
+                prevTrackButton.Enabled = true;
+
                 PlaySelected(currentIndex);
             }
         }
@@ -179,6 +185,7 @@ namespace MP3_Player_WF
                 audioFile = new AudioFileReader(playlist[index]);
                 output = new DirectSoundOut();
                 output.Init(audioFile);
+                audioFile.Volume = volumeSlider.Value / 100f;
                 output.Play();
                 lblNowPlaying.Text = "Зараз грає: " + Path.GetFileName(playlist[index]);
                 timer1.Start();
@@ -210,12 +217,21 @@ namespace MP3_Player_WF
                 // Перевірка завершення
                 if (output != null &&
                     output.PlaybackState == PlaybackState.Stopped &&
-                    currentTime >= totalTime &&
-                    currentIndex < playlist.Count - 1)
+                    currentTime >= totalTime)
                 {
-                    currentIndex++;
-                    PlaySelected(currentIndex);
+                    int nextIndex = GetNextIndex();
+                    if (nextIndex < playlist.Count)
+                    {
+                        currentIndex = nextIndex;
+                        PlaySelected(currentIndex);
+                    }
+                    else
+                    {
+                        DisposeAudio();
+                        button2.Enabled = false;
+                    }
                 }
+
                 else if (output != null &&
                     output.PlaybackState == PlaybackState.Stopped &&
                     currentIndex >= playlist.Count - 1)
@@ -234,9 +250,12 @@ namespace MP3_Player_WF
         // ##### Remove Button #####
         private void button1_Click_1(object sender, EventArgs e)
         {
-            playlist.RemoveAt(playlistBox.SelectedIndex);
-            playlistBox.Items.RemoveAt(playlistBox.SelectedIndex);
-            File.WriteAllLines("lastplaylist.txt", playlist);
+            if (playlistBox.SelectedIndex >= 0)
+            {
+                playlist.RemoveAt(playlistBox.SelectedIndex);
+                playlistBox.Items.RemoveAt(playlistBox.SelectedIndex);
+                File.WriteAllLines("lastplaylist.txt", playlist);
+            }
         }
 
         // ##### Progress Bar #####
@@ -250,23 +269,45 @@ namespace MP3_Player_WF
 
         private void nextTrackButton_Click(object sender, EventArgs e)
         {
-            if (output != null && currentIndex < playlist.Count - 1)
+            if (output != null)
             {
-                currentIndex++;
-                PlaySelected(currentIndex);
+                int nextIndex = GetNextIndex();
+                if (nextIndex < playlist.Count)
+                {
+                    currentIndex = nextIndex;
+                    PlaySelected(currentIndex);
+                }
             }
         }
 
         private void prevTrackButton_Click(object sender, EventArgs e)
         {
-            if (output != null && audioFile.CurrentTime > TimeSpan.FromSeconds(5))
+            if (output != null && audioFile.CurrentTime > TimeSpan.FromSeconds(2))
             {
                 audioFile.CurrentTime = TimeSpan.Zero;
             }
-            else if (output != null && audioFile.CurrentTime < TimeSpan.FromSeconds(5) && currentIndex > 0)
+            else if (output != null && audioFile.CurrentTime < TimeSpan.FromSeconds(2) && currentIndex > 0)
             {
                 currentIndex--;
                 PlaySelected(currentIndex);
+            }
+        }
+
+        private int GetNextIndex()
+        {
+            if (chkShuffle.Checked && playlist.Count > 1)
+            {
+                Random rnd = new Random();
+                int next;
+                do
+                {
+                    next = rnd.Next(playlist.Count);
+                } while (next == currentIndex);
+                return next;
+            }
+            else
+            {
+                return currentIndex + 1;
             }
         }
     }

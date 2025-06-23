@@ -42,6 +42,7 @@
             trackBar1 = new TrackBar();
             nextTrackButton = new Button();
             prevTrackButton = new Button();
+            chkShuffle = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)volumeSlider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             SuspendLayout();
@@ -170,11 +171,23 @@
             prevTrackButton.UseVisualStyleBackColor = true;
             prevTrackButton.Click += prevTrackButton_Click;
             // 
+            // chkShuffle
+            // 
+            chkShuffle.AutoSize = true;
+            chkShuffle.Location = new Point(421, 12);
+            chkShuffle.Name = "chkShuffle";
+            chkShuffle.Size = new Size(60, 17);
+            chkShuffle.TabIndex = 13;
+            chkShuffle.Text = "Shuffle";
+            chkShuffle.UseVisualStyleBackColor = true;
+            chkShuffle.CheckedChanged += chkShuffle_CheckedChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(686, 390);
+            Controls.Add(chkShuffle);
             Controls.Add(prevTrackButton);
             Controls.Add(nextTrackButton);
             Controls.Add(trackBar1);
@@ -211,5 +224,6 @@
         private TrackBar trackBar1;
         private Button nextTrackButton;
         private Button prevTrackButton;
+        private CheckBox chkShuffle;
     }
 }
