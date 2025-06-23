@@ -79,12 +79,10 @@ namespace MP3_Player_WF
                 if (output.PlaybackState == PlaybackState.Playing)
                 {
                     output.Pause();
-                    button2.Text = "Play";
                 }
                 else if (output.PlaybackState == PlaybackState.Paused)
                 {
                     output.Play();
-                    button2.Text = "Pause";
                 }
 
             }
@@ -174,7 +172,6 @@ namespace MP3_Player_WF
                 currentIndex = playlistBox.SelectedIndex;
 
                 button2.Enabled = true;
-                button2.Text = "Pause";
                 nextTrackButton.Enabled = true;
                 prevTrackButton.Enabled = true;
 
