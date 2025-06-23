@@ -8,16 +8,19 @@ namespace MP3_Player_WF
 {
     public partial class Form1 : Form
     {
-        public Form1()
-        {
-            InitializeComponent();
-        }
-
         private IWavePlayer output = null;
         private AudioFileReader audioFile = null;
 
         private List<string> playlist = new List<string>();
         private int currentIndex = -1;
+
+        private Dictionary<string, int> playCounts = new Dictionary<string, int>();
+        private readonly string statsFile = "playstats.txt";
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -36,6 +39,13 @@ namespace MP3_Player_WF
                     playlistBox.Items.Add(Path.GetFileName(line));
                 }
             }
+
+            LoadStats();
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DisposeAudio();
+            SaveStats();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -96,11 +106,6 @@ namespace MP3_Player_WF
             timer1.Stop();
             trackBar1.Value = 0;
             lblCurrentTime.Text = "0:00 / 0:00";
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            DisposeAudio();
         }
 
         private void playlistBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -219,6 +224,15 @@ namespace MP3_Player_WF
                     output.PlaybackState == PlaybackState.Stopped &&
                     currentTime >= totalTime)
                 {
+                    string playedTrack = playlist[currentIndex];
+                    if (playCounts.ContainsKey(playedTrack))
+                        playCounts[playedTrack]++;
+                    else
+                        playCounts[playedTrack] = 1;
+
+                    UpdateFavoriteLabel();
+                    SaveStats();
+
                     int nextIndex = GetNextIndex();
                     if (nextIndex < playlist.Count)
                     {
@@ -293,6 +307,7 @@ namespace MP3_Player_WF
             }
         }
 
+        // ##### Shuffle #####
         private int GetNextIndex()
         {
             if (chkShuffle.Checked && playlist.Count > 1)
@@ -315,5 +330,53 @@ namespace MP3_Player_WF
         {
 
         }
+
+        // ##### Stats #####
+        private void UpdateFavoriteLabel()
+        {
+            if (playCounts.Count == 0)
+            {
+                lblFavorite.Text = "Улюблений трек: -";
+                return;
+            }
+
+            var fav = playCounts.OrderByDescending(p => p.Value).First();
+            lblFavorite.Text = $"Улюблений трек: {Path.GetFileName(fav.Key)} ({fav.Value} разів)";
+        }
+        private void LoadStats()
+        {
+            try
+            {
+                if (File.Exists(statsFile))
+                {
+                    foreach (var line in File.ReadAllLines(statsFile))
+                    {
+                        var parts = line.Split('=');
+                        if (parts.Length == 2 && File.Exists(parts[0]) && int.TryParse(parts[1], out int count))
+                        {
+                            playCounts[parts[0]] = count;
+                        }
+                    }
+                    UpdateFavoriteLabel();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Помилка завантаження статистики: " + ex.Message);
+            }
+        }
+        private void SaveStats()
+        {
+            try
+            {
+                var lines = playCounts.Select(kvp => $"{kvp.Key}={kvp.Value}");
+                File.WriteAllLines(statsFile, lines);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Помилка збереження статистики: " + ex.Message);
+            }
+        }
+
     }
 }

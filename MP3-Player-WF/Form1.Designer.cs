@@ -43,6 +43,7 @@
             nextTrackButton = new Button();
             prevTrackButton = new Button();
             chkShuffle = new CheckBox();
+            lblFavorite = new Label();
             ((System.ComponentModel.ISupportInitialize)volumeSlider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             SuspendLayout();
@@ -182,11 +183,21 @@
             chkShuffle.UseVisualStyleBackColor = true;
             chkShuffle.CheckedChanged += chkShuffle_CheckedChanged;
             // 
+            // lblFavorite
+            // 
+            lblFavorite.AutoSize = true;
+            lblFavorite.Location = new Point(12, 13);
+            lblFavorite.Name = "lblFavorite";
+            lblFavorite.Size = new Size(106, 13);
+            lblFavorite.TabIndex = 14;
+            lblFavorite.Text = "Улюблений трек: - ";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(686, 390);
+            Controls.Add(lblFavorite);
             Controls.Add(chkShuffle);
             Controls.Add(prevTrackButton);
             Controls.Add(nextTrackButton);
@@ -225,5 +236,6 @@
         private Button nextTrackButton;
         private Button prevTrackButton;
         private CheckBox chkShuffle;
+        private Label lblFavorite;
     }
 }
