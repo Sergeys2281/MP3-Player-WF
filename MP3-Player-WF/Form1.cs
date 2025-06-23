@@ -310,5 +310,10 @@ namespace MP3_Player_WF
                 return currentIndex + 1;
             }
         }
+
+        private void chkShuffle_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
